@@ -7,10 +7,11 @@
     </head>
     <body>
         <h1>Shopping List</h1>
-        <form method="post" action=""> 
-        <label>Username:</label>
-        <input type="text" name="username" value="">
-        <input type="submit" value="Register name">
+        <form method="post" action="ShoppingList"> 
+            <input type="hidden" name="action" value="register">
+            <label>Username:</label>
+            <input type="text" name="username" value="">
+            <input type="submit" value="Register name">
         </form>
     </body>
 </html>
