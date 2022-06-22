@@ -18,6 +18,17 @@ public class ShoppingListServlet extends HttpServlet {
         
         HttpSession session = request.getSession();
         String user = (String) session.getAttribute("username");
+        String action = "";
+        
+        if (request.getParameter("action") != null)
+            action = request.getParameter("action");
+        
+        if (action.equals("logout")){
+            session.invalidate();
+            
+            getServletContext().getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
+            return;
+        }
         
         if (user != null){
             getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
@@ -33,16 +44,39 @@ public class ShoppingListServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession();
-        ArrayList<String> list = (ArrayList<String>) session.getAttribute("items");
+        ArrayList<String> list = (ArrayList<String>) session.getAttribute("list");
         String action = request.getParameter("action");
+        
+        if (list == null)
+            list = new ArrayList<>();
         
         if (action.equals("register")){
             String user = request.getParameter("username");
         
-            if (user.length() > 0) {
+            if (!user.equals("")) {
                 session.setAttribute("username",user);
                 
                 getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
+                return;
+            }
+        }else if (action.equals("add")){
+            String item = request.getParameter("listInput");
+            
+            if (item != null && item.length() > 0 ){
+                list.add(item);
+                session.setAttribute("list",list);
+                
+                response.sendRedirect("ShoppingList");
+                return;
+            }
+        }else if (action.equals("delete")){
+            String item = request.getParameter("shoplist");
+            
+            if (item != null){
+                list.remove(item);
+                session.setAttribute("list",list);
+                
+                response.sendRedirect("ShoppingList");
                 return;
             }
         }
